@@ -1,0 +1,119 @@
+Introduction, Logistics, What You'll Learn
+
+Why Scala, Spark ?
+	
+	R, MATLAB only for small dataset( fits in memory )
+	Spark for data analyses for dataset which wont fit in memory
+
+	Scala <-> Spark 1-1 collections api mapping.
+
+	Spark is more expressive than Hadoop, higher order functions in spark but not in hadoop.
+
+	Spark is more Performant and hihgly productive
+
+	Spark is good for data science ( iterations on same set of data is really easy without boiler plate as in hadoop )
+
+Data Parallel (in shared Memory) to Distributed Data parallelism
+
+	Shared memory data parallellism ( collections )
+	1. split the data
+	2. workers independently operate on the data shards in parallel
+	3. combine when done if necessary
+
+	Distributed data parallelism ( distributed collections )
+	1. split data over several nodes
+	2. nodes independently operate on the data shards in parallel
+	3. combine when done if necessary
+	   ( concern network latency )
+
+Spark implements a distributed data parallel model called Resilient Distributed Dta Model ( RDD )
+
+Latency
+
+	Distribuition introduces important concerns
+	1. Partial Failure : crash failures of a subset of the machines involved in distributed computation
+	2. Latency : certain operations have a much higher latency than other operations due to network communication.
+
+
+	Hadoop ( based on Google's map reduce )
+	1. 2 simple apis map and reduce
+	2. Fault tolerance
+
+	Fault tolerance in Hadoop comes at a cost.
+		Between each map and reduce step, in order to recover from potential failures, Hadoop/MapReduce shuffles its data and write intermediate data to disk.
+	** Reading/Writing to disk is 100x slower than in memory
+	** Network communication is 1000000x slower than in memory.
+
+	Why Spark?
+	-> Retains fault tolerance
+	-> Different strategy for handling latency ( Keep all data immutable and in-memory. All operations on data are just functional transformations, like regular scala collections. Fault tolerance is achieved by replaying functional transformations over original dataset. As a result Spark has been shown to be 100x more performant than hadoop, while adding even more expressive APIs. It aggresively minimizes the network traffic
+
+
+
+Resilient Distributed Datasets( RDDs ), Spark's distributed collections
+
+	RDDs seem a lot like immutable sequential or parallel scala collections
+
+	How to create RDD
+	1. Transforming existing RDD
+	2. From a SparkContext ( or SparkSession ) // handle to spark cluster
+		parallelize : convert a local scala collection to an RDD
+		textFile: read a text file from HDFS or a local file system and return an RDD of String
+
+
+Transformation and Actions 
+
+	Transformers => returns new collection as results ( map, filter, distinct )
+	Accessors => Return single values as results ( fold, reduce, count, max )
+
+	Transformers <=> Transformations ( Lazy )
+	Accessors <=> Actions ( Eager )	! important !
+
+val largeList: List[String] = ....
+val wordRdd = sc.parallelize(largeList)
+val lengthsRdd = wordRdd.map( _.length ) // lazy
+
+val totalChars = lengthsRdd.reduce( _ + _ ) // eager
+
+Actions ( collect, count, take, reduce, foreach ) // eager
+
+Benifits of laziness for Large-scale Data
+
+val lastYEsarsLogs: RDD[String] = ...
+val firstLogsWithErrors = lastYearsLogs.filter(_.contains("Error")).take(10);
+
+The execution of filter is deferred until the take action is applied. 
+Spark leverages this by analyzing and optimizing the chain of operations before executing it.
+
+Spark will not compute intermediate RDDs. Instead, as soon as 10 elements of the filtered RDD have been computed.
+
+// Transformations ( Union, intersection, subtract, cartesian ) Set like operations
+
+// Actions ( takeSample, takeOrdered, saveAsTextFile, saveAsSequenceFile )  
+
+Evaluation in Spark: Unlike Scala collections
+	
+	There is no i/o between transformations in spark, so very good to run multiple iterations, where as Hadoop have to perform IO
+
+Caching and Persistance
+	// rdd.persist();
+	1. in memory regular java objects
+	2. on disk as regular java objects
+	3. in memory serialized
+	4. on disk serialized
+	5. both in memory and on disk( spill over to disk )
+
+Cache is always in memory
+persist can be configured to store at different storage level
+
+
+Cluster Topology Matters!!!
+
+Spark is organized in Master, Worker topology
+
+Execution of a Spark program
+1. The driver program runs the spark application, which creates a SparkContext upon start-up.
+2. The SparkContext connects to a cluster manager ( Mesos, Yarn ) which allocates resource
+3. Spark acquires executors on nodes in the cluster, which are processes that run computations and store data for your application
+4. Next, driver program sends your application code to the executors
+5. Finally SparkContext sends tasks for the executors to run.
