@@ -1,0 +1,55 @@
+1. Reduction Operations
+
+fold, reduce, aggregate
+Walk through a collection and combine neighboring elements of the collection together to produce single combined result ( rather that another collection )
+
+Parallel reduction operation
+Fold(Parallelizable) vs FoldLeft ( not parallelizable )
+
+def foldLeft[B](z:B)(f: (B,A) => B): B /NP
+def fold(z: A)(f: (A, A) =>A): B /P
+def aggregate[B](z: =>B)(seqop: (B, A)=>B, combop(B, B) =>B): B /Parallelize //Very imp
+
+Q: Why not still have a serial foldLeft/foldRight on Spark?
+Doing things serially across a cluster is actually difficult. Lots of synchronization, doesn't make a lot of sense.
+
+
+2. Pair RDDs ( Distributed key value pairs )
+
+Manipulating key-value value pair is more common in map/reduce
+RDD[(K, V)] groupByKey, reduceByKey, join
+
+Creating a pair RDD
+val rdd: RDD[Wiki] = 
+val pairRdd = rdd.map(page => (page.title, page.text));
+
+3. Transformations and Actions on Pair RDD
+
+groupByKey, reduceByKey, mapValues, keys, join, leftOuterJoin/rightOuterJoin // transformations
+
+countByKey// action
+
+def groupBy[K](f: A=>K): Map[K, Traversable[A]]
+def groupByKey(): RDD[(K, Iterable[V])]
+
+def reduceByKey( func: (V,V) => V): RDD[(K, V)]
+
+def mapValues[U](f: V=>U): RDD[(K,U)]
+
+4. Joins ( conceptually similar to database )
+Combines 2 pair rdds
+-> Inner Join( join )
+-> Outer Join( leftOuterJoin/rightOuterJoin )
+
+def join[W](other: RDD[(K,W)]): RDD[(K, (V,W))] // Inner join, only keys present in both rdds.
+
+OuterJoins // based on left or right we get to keep the keys
+
+def leftOuterJoin[W](other: RDD[K,W]): RDD[(K, (V, Option[W]]
+def rightOuterJoin[W](other: RDD[(K,W)]): RDD[(K, (Option[V], W))]
+
+
+
+
+
+

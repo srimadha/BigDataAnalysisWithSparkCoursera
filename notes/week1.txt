@@ -30,7 +30,7 @@ Spark implements a distributed data parallel model called Resilient Distributed 
 
 Latency
 
-	Distribuition introduces important concerns
+	Distribution introduces important concerns
 	1. Partial Failure : crash failures of a subset of the machines involved in distributed computation
 	2. Latency : certain operations have a much higher latency than other operations due to network communication.
 
