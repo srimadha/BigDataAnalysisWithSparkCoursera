@@ -244,9 +244,9 @@ class StackOverflow extends Serializable {
       ( findClosest( v, means ), v )
     })
 
-    /*val clusterCount: RDD[(Int, (Int, Int, Int))] = cluster.mapValues( f => { (f._1, f._2, 1)})
+    //val clusterCount: RDD[(Int, (Int, Int, Int))] = cluster.mapValues( f => { (f._1, f._2, 1)})
 
-    val clusterAverage = clusterCount.reduceByKey( (a, b) => {
+    /*val cavg = clusterCount.reduceByKey( (a, b) => {
       ( a._1 + b._1, a._2 + b._2, a._3 + b._3)
     }).mapValues( f => {
       ( (f._1 / f._3).toInt , (f._2 / f._3).toInt )

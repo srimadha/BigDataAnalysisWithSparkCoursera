@@ -1,0 +1,19 @@
+Shuffling
+1. Moving data around network ( groupByKey expensive )
+2. Reduce by key reduces shuffling
+
+Partitioning
+1. Data within an RDD is split into several partitions
+
+Properties of partitions
+1. partitions never span multiple machines.
+2. Each machine in the cluster contains one or more partitions
+3, Number of partitions to use is configurable
+
+Hash partitioning
+hashcode % number of partitions
+
+Range Partitioning
+When keys have some sort of order, sorted ranges of key
+
+partitionsBy => creates RDD with specific partitioner
