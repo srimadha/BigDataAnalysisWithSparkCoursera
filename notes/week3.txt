@@ -18,6 +18,7 @@ When keys have some sort of order, sorted ranges of key
 
 partitionsBy => creates RDD with specific partitioner
 
+
 HashPartitioner ( used with joins to reduce shuffles )
 
 Wide Vs Narrow Dependencies
@@ -35,3 +36,4 @@ RDD compositions
 Narrow dependency -> Each partition of the parent RDD is used by at most on partition of the child RDD
 
 Wide dependency -> Each partition of the parent RDD may be depended on by multiple child partiitions
+
