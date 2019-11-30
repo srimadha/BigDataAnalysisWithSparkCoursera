@@ -1,0 +1,63 @@
+Spark SQL ( to make optimization possible )
+
+Structured, Semi-Structured, Unstructured
+Databases, json/xml, log files/images
+
+
+Spark SQL goals
+1. Support relational processing both within Spark programs
+2, High Performance
+3. Easily support new data sources.
+
+Spark SQL is a component of the spark stack
+
+APis
+1. SQL literal syntax
+2. Dataframes
+3. Datasets
+
+Backend components
+1. catalyst ( query optimizer )
+2. Tungsten ( off heap serializer )
+
+Data frames -> untyped
+
+Creating Data frames
+
+1. Create an RDD of rows from original RDD
+2. Create schema represented by struct type matching the structure of rows in the RDD
+3. Apply the schema to the RDD of rows via createDataFrame method
+
+Create Dataframe by reading in a data source from file.
+
+peopleDF.createOrReplaceTempView("people")
+
+val adultDf = spark.sql("Select * from people where age > 17")
+
+Data frames
+1. Relational API over Spark's RDDs
+2. Aggressively optimized
+3. Untyped
+
+-> Works only on restricted set of data types
+complex data types allowed, array, map, case class structtype
+
+Common DataFrame Transformation
+
+def select( col: string, cols: string* ): Dataframe
+
+def agg( expr:Column, ezprs: columns): Datafrane
+
+def groupBy(col1, stringm cols: String*): Datagrame
+
+def join( right: Dataframe): Dataframe
+
+Action on Dataframes
+-> collect
+-> count
+-> first
+-> show
+-> take
+
+
+

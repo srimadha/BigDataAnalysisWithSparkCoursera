@@ -4,3 +4,7 @@
 stackoverflow/.DS_Store
 stackoverflow/src/.DS_Store
 stackoverflow/src/main/.DS_Store
+/timeusage/target/
+/timeusage/target/
+/timeusage/src/main/resources/timeusage/
+/timeusage/.idea/
